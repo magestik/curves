@@ -1,23 +1,26 @@
 #include "BSpline.h"
 
-#include <stdio.h>
 #include <assert.h>
+
+#define SAFE 0
 
 /**
  * @brief BSpline::BSpline
  * @param points
  * @param order
+ * @param open_uniform
  */
 BSpline::BSpline(const std::vector<vec3> & points, int order,  bool open_uniform)
-: m_aControlPoints(points)
+: Curve(points)
 , m_aKnots()
 , m_iOrder(order)
+, m_bOpenUniform(open_uniform)
 {
 	int nbKnots = m_iOrder + m_aControlPoints.size(); // k + (n+1)
 
 	int n = m_aControlPoints.size() - 1;
 
-	if (!open_uniform)
+	if (!m_bOpenUniform)
 	{
 		for (int i = 0; i < nbKnots; ++i)
 		{
@@ -48,7 +51,7 @@ BSpline::BSpline(const std::vector<vec3> & points, int order,  bool open_uniform
  * @param u
  * @return
  */
-vec3 BSpline::eval(float u)
+vec3 BSpline::eval(float u) const
 {
 	int interval = -1;
 
@@ -58,7 +61,7 @@ vec3 BSpline::eval(float u)
 	float offset	= m_aKnots[start-1];
 	float range		= m_aKnots[end-1] - m_aKnots[start-1];
 
-	float u_in_range = offset + range * u;
+	float u_in_range = offset + range * u; // u is in [0,1] so we have to put u in knots range
 
 	for (int i = start; i < end; ++i)
 	{
@@ -82,20 +85,25 @@ vec3 BSpline::eval(float u)
  * @param points
  * @param knots
  * @param u
- * @param k : order
+ * @param k
  * @return
  */
-vec3 BSpline::recurse_eval(std::vector<vec3> & points, std::vector<int> & knots, float u, int k)
+vec3 BSpline::recurse_eval(std::vector<vec3> & points, std::vector<int> & knots, float u, int k) const
 {
 	compute_points(points, knots, u, k--);
 
+#if SAFE
 	points.pop_back();
 	knots.pop_back();
+#endif // SAFE
+
 	knots.erase(knots.begin());
 
 	if (1 == k)
 	{
+#if SAFE
 		assert(1 == points.size());
+#endif // SAFE
 		return(points[0]);
 	}
 
@@ -107,21 +115,26 @@ vec3 BSpline::recurse_eval(std::vector<vec3> & points, std::vector<int> & knots,
  * @param points
  * @param knots
  * @param u
- * @param k : order
+ * @param k
  * @return
  */
-vec3 BSpline::iterative_eval(std::vector<vec3> & points, std::vector<int> & knots, float u, int k)
+vec3 BSpline::iterative_eval(std::vector<vec3> & points, std::vector<int> & knots, float u, int k) const
 {
 	while (k > 1)
 	{
 		compute_points(points, knots, u, k--);
 
+#if SAFE
 		points.pop_back();
 		knots.pop_back();
+#endif // SAFE
+
 		knots.erase(knots.begin());
 	}
 
+#if SAFE
 	assert(1 == points.size());
+#endif // SAFE
 
 	return(points[0]);
 }

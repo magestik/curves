@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include <BSpline.h>
+#include <Curve.h>
 
 int main (int argc, char ** argv)
 {
@@ -15,7 +15,7 @@ int main (int argc, char ** argv)
 
 	BSpline spline(control_points, 4);
 
-	for (int i = 0; i < 101; ++i)
+	for (int i = 0; i <= 100; ++i)
 	{
 		vec3 p = spline.eval(i/100.0f);
 		printf("%d = %f ; %f ; %f \n", i, p.x, p.y, p.z);

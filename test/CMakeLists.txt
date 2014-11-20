@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 2.8.11)
 
-FILE(GLOB src *.cpp *.h)
-
 include_directories(../src)
 
-add_executable(test ${src})
+add_executable(spline spline.cpp)
+target_link_libraries(spline curves)
 
-target_link_libraries(test curves)
+add_executable(patch patch.cpp)
+target_link_libraries(patch curves)
