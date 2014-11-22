@@ -12,6 +12,7 @@ class Patch
 
 public:
 
+	explicit Patch (void);
 	explicit Patch (const std::vector<Curve*> & curves);
 
 	template<class T, class ... Types>

@@ -9,6 +9,15 @@
  * @param dir
  * @param gen
  */
+Patch::Patch()
+{
+	// ...
+}
+
+/**
+ * @brief Patch::Patch
+ * @param curves
+ */
 Patch::Patch(const std::vector<Curve*> & curves)
 : m_aCurves(curves)
 {
