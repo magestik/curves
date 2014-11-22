@@ -6,18 +6,15 @@
 int main (int argc, char ** argv)
 {
 	std::vector<BSpline> splines;
+	std::vector<LagrangeInterpolator> lagrange;
 
 	{
 		std::vector<vec3> control_points;
 
 		control_points.push_back(vec3(0,0,0));
-		control_points.push_back(vec3(1,0,0));
-		control_points.push_back(vec3(2,0,0));
-		control_points.push_back(vec3(3,0,0));
-		control_points.push_back(vec3(4,0,0));
 		control_points.push_back(vec3(5,0,0));
 
-		splines.push_back(BSpline(control_points, 4));
+		lagrange.push_back(LagrangeInterpolator(control_points));
 	}
 
 	{
@@ -59,10 +56,11 @@ int main (int argc, char ** argv)
 	}
 
 	std::vector<Curve*> curves;
+	curves.push_back(&(lagrange[0]));
 	curves.push_back(&(splines[0]));
 	curves.push_back(&(splines[1]));
 	curves.push_back(&(splines[2]));
-	curves.push_back(&(splines[3]));
+
 
 	Patch patch(curves);
 
