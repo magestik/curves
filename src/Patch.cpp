@@ -1,5 +1,7 @@
 #include "Patch.h"
 
+#include "Curve.h"
+
 #include <assert.h>
 
 /**
@@ -7,14 +9,31 @@
  * @param dir
  * @param gen
  */
-template<class T>
-Patch<T>::Patch(const std::vector<T> & curves)
+Patch::Patch(const std::vector<Curve*> & curves)
 : m_aCurves(curves)
 {
-	for (const T & c : m_aCurves)
+	// ...
+}
+
+/**
+ * @brief Patch::eval
+ * @param u
+ * @param v
+ * @return
+ */
+template<class T, class ... Types>
+vec3 Patch::eval(float u, float v, Types ... args) const
+{
+	std::vector<vec3> gen;
+
+	for (const Curve * c : m_aCurves)
 	{
-		assert(c.size() == m_aCurves[0].size());
+		gen.push_back(c->eval(v));
 	}
+
+	T b(gen);
+
+	return(b.eval(u));
 }
 
 /**
@@ -24,18 +43,16 @@ Patch<T>::Patch(const std::vector<T> & curves)
  * @return
  */
 template<>
-vec3 Patch<BSpline>::eval(float u, float v) const
+vec3 Patch::eval<BSpline>(float u, float v, int order, bool open_uniform) const
 {
 	std::vector<vec3> gen;
 
-	for (const BSpline & c : m_aCurves)
+	for (const Curve * c : m_aCurves)
 	{
-		gen.push_back(c.eval(v));
+		gen.push_back(c->eval(v));
 	}
 
-	BSpline b(gen, m_aCurves[0].order(), m_aCurves[0].openUniform());
+	BSpline b(gen, order, open_uniform);
 
 	return(b.eval(u));
 }
-
-template class Patch<BSpline>;

@@ -1,19 +1,27 @@
 #pragma once
 
-#include "Curve.h"
+#include <vector>
 
-template<class T>
+#include <Vector.h>
+
+class Curve;
+class BSpline;
+
 class Patch
 {
 
 public:
 
-	explicit Patch (const std::vector<T> & curves);
+	explicit Patch (const std::vector<Curve*> & curves);
 
-	vec3 eval (float u, float v) const;
+	template<class T, class ... Types>
+	vec3 eval (float u, float v, Types ... args) const;
 
 private:
 
-	std::vector<T> m_aCurves;
+	std::vector<Curve*> m_aCurves;
 
 };
+
+template<>
+vec3 Patch::eval<BSpline>(float u, float v, int order, bool open_uniform) const;
