@@ -37,9 +37,11 @@ vec3 Patch::eval(float u, float v, Types ... args) const
 }
 
 /**
- * @brief Patch::eval
+ * @brief Patch::eval<BSpline>
  * @param u
  * @param v
+ * @param order
+ * @param open_uniform
  * @return
  */
 template<>

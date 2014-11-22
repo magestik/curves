@@ -24,3 +24,4 @@ protected:
 };
 
 #include "impl/BSpline.h"
+#include "impl/LagrangeInterpolator.h"
