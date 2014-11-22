@@ -6,6 +6,7 @@
 
 class Curve;
 class BSpline;
+class LagrangeInterpolator;
 
 class Patch
 {
@@ -26,3 +27,6 @@ private:
 
 template<>
 vec3 Patch::eval<BSpline>(float u, float v, int order, bool open_uniform) const;
+
+template<>
+vec3 Patch::eval<LagrangeInterpolator>(float u, float v) const;
