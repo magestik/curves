@@ -5,28 +5,27 @@
 
 int main (int argc, char ** argv)
 {
-	if (argc != 2)
+	if (argc != 3)
 	{
-		fprintf(stderr, "Argument required : number of samples");
+		fprintf(stderr, "Usage : ./benchmark [number of control points] [number of samples]");
 		return -1;
 	}
 
-	int nb_sample = atoi(argv[1]);
+	int nb_points = atoi(argv[1]);
+	int nb_samples = atoi(argv[2]);
 
 	std::vector<vec3> control_points;
 
-	control_points.push_back(vec3(0,0,0));
-	control_points.push_back(vec3(1,1,1));
-	control_points.push_back(vec3(2,2,2));
-	control_points.push_back(vec3(3,3,3));
-	control_points.push_back(vec3(4,4,4));
-	control_points.push_back(vec3(5,5,5));
+	for (int i = 0; i < nb_points; ++i)
+	{
+		control_points.push_back(vec3(i,i,i));
+	}
 
 	BSpline spline(control_points, 4);
 
-	for (int i = 0; i <= nb_sample; ++i)
+	for (int i = 0; i <= nb_samples; ++i)
 	{
-		vec3 p = spline.eval(i/float(nb_sample));
+		vec3 p = spline.eval(i/float(nb_samples));
 		//printf("%d = %f ; %f ; %f \n", i, p.x, p.y, p.z);
 	}
 

@@ -15,9 +15,9 @@ make
 popd
 
 echo "----------------- recursive"
-time ./build_recursive/test/benchmark 10000000
+time ./build_recursive/test/benchmark 100000 100000
 
 echo "----------------- iterative"
-time ./build_iterative/test/benchmark 10000000
+time ./build_iterative/test/benchmark 100000 100000
 
 
