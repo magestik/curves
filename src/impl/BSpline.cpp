@@ -4,6 +4,10 @@
 
 #define SAFE 0
 
+#ifndef USE_RECURSIVE_EVAL
+#define USE_RECURSIVE_EVAL 0
+#endif
+
 /**
  * @brief BSpline::BSpline
  * @param points
@@ -77,8 +81,14 @@ vec3 BSpline::eval(float u) const
 	std::vector<vec3> points (m_aControlPoints.begin() + interval - (m_iOrder - 1), m_aControlPoints.begin() + interval + 1);
 	std::vector<int> knots (m_aKnots.begin() + interval - (m_iOrder - 2), m_aKnots.begin() + interval + m_iOrder);
 
+#if USE_RECURSIVE_EVAL
 	return(recurse_eval(points, knots, u_in_range, m_iOrder));
+#else
+	return(iterative_eval(points, knots, u_in_range, m_iOrder));
+#endif
 }
+
+#if USE_RECURSIVE_EVAL
 
 /**
  * @brief BSpline::recurse_eval
@@ -88,6 +98,7 @@ vec3 BSpline::eval(float u) const
  * @param k
  * @return
  */
+
 vec3 BSpline::recurse_eval(std::vector<vec3> & points, std::vector<int> & knots, float u, int k) const
 {
 	compute_points(points, knots, u, k--);
@@ -109,6 +120,8 @@ vec3 BSpline::recurse_eval(std::vector<vec3> & points, std::vector<int> & knots,
 
 	return recurse_eval(points, knots, u, k);
 }
+
+#else
 
 /**
  * @brief BSpline::iterative_eval
@@ -138,3 +151,5 @@ vec3 BSpline::iterative_eval(std::vector<vec3> & points, std::vector<int> & knot
 
 	return(points[0]);
 }
+
+#endif

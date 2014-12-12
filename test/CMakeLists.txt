@@ -10,3 +10,6 @@ target_link_libraries(patch curves)
 
 add_executable(lagrange lagrange.cpp)
 target_link_libraries(lagrange curves)
+
+add_executable(benchmark benchmark.cpp)
+target_link_libraries(benchmark curves)
